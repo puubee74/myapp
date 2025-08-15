@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/mongo"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL_MONGO")
+}
+
+model Event {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  type      String
+  payload   Json
+  createdAt DateTime @default(now())
+
+  @@index([type, createdAt(sort: Desc)])
+}
+
+model Audit {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  actorId   Int
+  action    String
+  meta      Json?
+  createdAt DateTime @default(now())
+
+  @@index([actorId, createdAt(sort: Desc)])
+}
